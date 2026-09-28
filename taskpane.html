@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyMath cho Word</title>
+  <!-- Office.js bắt buộc tải từ CDN của Microsoft -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="icon" href="./icons/icon-64.png" sizes="64x64" />
+</head>
+<body class="pane">
+  <header class="pane-head">
+    <img src="./icons/icon.svg" alt="" width="24" height="24" />
+    <strong>MyMath</strong>
+    <span class="chip" id="status">Đang kết nối Word…</span>
+    <span class="grow"></span>
+    <button class="icon-btn" id="btnUndo" title="Hoàn tác"></button>
+    <button class="icon-btn" id="btnNew" title="Công thức mới"></button>
+  </header>
+
+  <section id="editorHost" class="pane-editor"></section>
+
+  <div class="pane-body">
+    <div class="row">
+      <div class="seg" id="modeSeg" role="group" aria-label="Kiểu công thức">
+        <button type="button" data-display="1">Riêng dòng</button>
+        <button type="button" data-display="0">Cùng dòng</button>
+      </div>
+    </div>
+    <p class="warn" id="warn" hidden></p>
+    <button class="btn primary big" id="btnInsert"></button>
+    <p class="editing" id="editing" hidden>Đang sửa công thức lấy từ Word — bấm nút trên để thay thế công thức đang chọn. <a href="#" id="asNew">Chèn thành công thức mới</a></p>
+    <div class="row two">
+      <button class="btn" id="btnPick" title="Bôi đen công thức trong Word rồi bấm để mở ra sửa"></button>
+      <button class="btn" id="btnLatex" title="Copy mã LaTeX"></button>
+    </div>
+
+    <h3 class="sub">Gần đây</h3>
+    <ul class="recent" id="recent"></ul>
+    <p class="muted small">Mẹo: <kbd>Ctrl</kbd>+<kbd>Enter</kbd> để chèn. Công thức chèn vào là phương trình gốc của Word.</p>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/taskpane.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Đưa MyMath lên GitHub Pages: vừa là web/PWA (cài trên Windows, Android),
+# vừa là nơi host Word add-in (manifest.xml nằm ở <url>/manifest.xml).
+name: Deploy web + Word add-in
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+env:
+  ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - id: pages
+        uses: actions/configure-pages@v5
+      - run: npx vite build
+      - run: node scripts/make-manifest.mjs --url "${{ steps.pages.outputs.base_url }}/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

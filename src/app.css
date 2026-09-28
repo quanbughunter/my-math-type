@@ -1,0 +1,70 @@
+@import './ui/base.css';
+
+.app { min-height: 100%; display: flex; flex-direction: column; }
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: calc(8px + env(safe-area-inset-top)) 12px 8px 14px; background: var(--surface); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand strong { font-size: 17px; letter-spacing: .2px; }
+.brand .tag { display: block; color: var(--muted); font-size: 12.5px; margin-top: -2px; }
+.top-actions { display: flex; align-items: center; gap: 2px; }
+.top-actions .sep { width: 1px; height: 22px; background: var(--border); margin: 0 6px; }
+
+.workspace { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 14px 16px calc(24px + var(--vk-h)); display: flex; flex-direction: column; gap: 12px; }
+.editor-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); }
+.editor-card .mm-tabs { border-radius: 16px 16px 0 0; }
+.editor-card .mm-field-wrap { background: var(--bg); }
+.editor-card math-field.mm-field { min-height: 190px; }
+
+.mode-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.size { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
+.size input { width: 140px; accent-color: var(--accent); }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+.actions .big { min-height: 48px; padding: 0 22px; font-size: 16px; border-radius: 12px; }
+.actions .more { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+.actions .more .btn { min-height: 48px; border-radius: 12px; }
+.hint { margin: -2px 2px 0; color: var(--muted); font-size: 13.5px; }
+
+.source { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0 12px; }
+.source summary { cursor: pointer; padding: 11px 2px; color: var(--muted); font-size: 14px; }
+.source[open] { padding-bottom: 12px; }
+.src-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
+.src-tabs button:not(.btn) { border: 1px solid var(--border); background: var(--surface-2); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+.src-tabs button.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.btn.small { min-height: 30px; padding: 0 10px; font-size: 13px; margin-left: auto; }
+#srcText {
+  width: 100%; resize: vertical; min-height: 90px; font: 13px/1.5 ui-monospace, Consolas, "Cascadia Mono", monospace;
+  border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; background: var(--bg); color: var(--text);
+}
+
+/* ---------- thư viện ---------- */
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(380px, 100vw); background: var(--surface);
+  border-left: 1px solid var(--border); box-shadow: -10px 0 30px rgba(0,0,0,.12); z-index: 20;
+  display: flex; flex-direction: column; padding-top: env(safe-area-inset-top);
+}
+.drawer[hidden] { display: none; }
+.drawer-head, .drawer-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; }
+.drawer-head { border-bottom: 1px solid var(--border); }
+.drawer-foot { border-top: 1px solid var(--border); flex-wrap: wrap; justify-content: flex-start; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+.lib-list { list-style: none; margin: 0; padding: 8px; overflow: auto; flex: 1; }
+.lib-list li { display: flex; align-items: center; gap: 4px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; background: var(--bg); }
+.lib-list .pick { flex: 1; min-width: 0; text-align: left; border: 0; background: transparent; padding: 10px 12px; cursor: pointer; overflow-x: auto; font-size: 17px; }
+.lib-list .pick:hover { background: var(--accent-soft); border-radius: 10px 0 0 10px; }
+.lib-list .fav-on { color: #d99a00; }
+.lib-empty { color: var(--muted); padding: 24px 12px; text-align: center; }
+
+@media (max-width: 640px) {
+  .brand .tag { display: none; }
+  .workspace { padding: 10px 10px calc(16px + var(--vk-h)); gap: 10px; }
+  .editor-card math-field.mm-field { min-height: 130px; }
+  .actions .big { width: 100%; }
+  .actions .more .btn { flex: 1 1 calc(50% - 8px); padding: 0 8px; font-size: 14px; }
+  .mm-palette { max-height: 108px; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); }
+  .top-actions .sep { display: none; }
+  .icon-btn { width: 36px; height: 36px; }
+}

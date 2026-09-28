@@ -1,0 +1,81 @@
+{
+  "name": "my-math-type",
+  "productName": "MyMath",
+  "version": "1.0.0",
+  "description": "Soạn công thức toán kiểu MathType, dán vào Word thành phương trình gốc; chạy trên Windows, Android và làm Word add-in.",
+  "author": "MyMath",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/make-manifest.mjs",
+    "preview": "vite preview",
+    "test": "node tests/convert.test.mjs",
+    "manifest": "node scripts/make-manifest.mjs",
+    "addin:certs": "npx --yes office-addin-dev-certs install",
+    "addin:dev": "vite --mode addin",
+    "app": "vite build && electron .",
+    "dist:win": "vite build && electron-builder --win nsis portable",
+    "android:sync": "vite build && cap sync android",
+    "android:open": "cap open android"
+  },
+  "mymath": {
+    "addinUrl": "https://quanbughunter.github.io/my-math-type/",
+    "addinId": "7f3c2a51-9b4e-4d8a-a6c1-5e2f0b9d4c73",
+    "addinIdDev": "7f3c2a51-9b4e-4d8a-a6c1-5e2f0b9d4c74"
+  },
+  "build": {
+    "appId": "com.mymath.editor",
+    "productName": "MyMath",
+    "copyright": "MyMath",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MyMath",
+      "artifactName": "MyMath-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "MyMath-${version}-portable.${ext}"
+    }
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/clipboard": "^8.0.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/filesystem": "^8.1.3",
+    "@capacitor/share": "^8.0.2",
+    "@xmldom/xmldom": "^0.9.12",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
+    "jszip": "^3.10.2",
+    "mathjax": "^3.2.2",
+    "mathlive": "^0.110.0",
+    "mathml2omml": "^0.5.0",
+    "temml": "^0.13.5",
+    "vite": "^8.3.1"
+  }
+}

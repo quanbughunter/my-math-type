@@ -1,0 +1,8 @@
+{
+  "appId": "com.mymath.editor",
+  "appName": "MyMath",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#f3f4f8"
+  }
+}

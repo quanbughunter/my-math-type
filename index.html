@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MyMath — Soạn công thức</title>
+  <meta name="description" content="Soạn công thức toán kiểu MathType, dán vào Word thành phương trình gốc." />
+  <meta name="theme-color" content="#2a52d6" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="./icons/icon-64.png" sizes="64x64" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <img src="./icons/icon.svg" alt="" width="30" height="30" />
+        <div>
+          <strong>MyMath</strong>
+          <span class="tag">Soạn công thức cho Word</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="btnUndo" title="Hoàn tác (Ctrl+Z)"></button>
+        <button class="icon-btn" id="btnRedo" title="Làm lại (Ctrl+Y)"></button>
+        <button class="icon-btn" id="btnNew" title="Công thức mới"></button>
+        <span class="sep"></span>
+        <button class="icon-btn" id="btnLib" title="Thư viện công thức"></button>
+        <button class="icon-btn" id="btnSettings" title="Cài đặt"></button>
+        <button class="icon-btn" id="btnHelp" title="Hướng dẫn"></button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="editor-card" id="editorHost"></section>
+
+      <div class="mode-row">
+        <div class="seg" id="modeSeg" role="group" aria-label="Kiểu công thức">
+          <button type="button" data-display="1" title="Công thức nằm riêng một dòng, căn giữa">Riêng dòng</button>
+          <button type="button" data-display="0" title="Công thức nằm trong dòng chữ">Cùng dòng</button>
+        </div>
+        <label class="size">
+          <span>Cỡ</span>
+          <input type="range" id="fontSize" min="18" max="56" step="2" />
+        </label>
+      </div>
+
+      <p class="warn" id="warn" hidden></p>
+
+      <section class="actions" aria-label="Xuất công thức">
+        <button class="btn primary big" id="btnWord" title="Copy rồi dán vào Word (Ctrl+Enter)"></button>
+        <div class="more">
+          <button class="btn" id="btnLatex" title="Copy mã LaTeX"></button>
+          <button class="btn" id="btnImage" title="Copy ảnh PNG (dán vào Zalo, PowerPoint…)"></button>
+          <button class="btn" id="btnDocx" title="Tải tệp Word chứa công thức"></button>
+          <button class="btn" id="btnFav" title="Lưu vào thư viện (Ctrl+S)"></button>
+        </div>
+      </section>
+      <p class="hint" id="hint">Bấm <b>Copy vào Word</b> rồi sang Word nhấn <kbd>Ctrl</kbd>+<kbd>V</kbd> — công thức thành phương trình của Word, sửa tiếp được.</p>
+
+      <details class="source" id="source">
+        <summary>Mã nguồn công thức (LaTeX · MathML · OMML)</summary>
+        <div class="src-tabs" role="tablist">
+          <button type="button" data-k="latex" class="on">LaTeX (sửa được)</button>
+          <button type="button" data-k="mathml">MathML</button>
+          <button type="button" data-k="omml">OMML (Word)</button>
+          <button type="button" class="btn small" id="btnCopySrc">Copy</button>
+        </div>
+        <textarea id="srcText" spellcheck="false" rows="4" aria-label="Mã nguồn"></textarea>
+      </details>
+    </main>
+
+    <aside class="drawer" id="drawer" aria-label="Thư viện công thức" hidden>
+      <div class="drawer-head">
+        <div class="seg" id="libSeg">
+          <button type="button" data-f="recent" class="on">Gần đây</button>
+          <button type="button" data-f="fav">Đã lưu</button>
+        </div>
+        <button class="icon-btn" id="btnCloseLib" title="Đóng"></button>
+      </div>
+      <ul class="lib-list" id="libList"></ul>
+      <div class="drawer-foot">
+        <button class="btn" id="btnLibDocx" title="Xuất các công thức đang hiện ra một tệp Word"></button>
+        <button class="btn" id="btnLibExport" title="Sao lưu thư viện ra tệp .json">Sao lưu</button>
+        <button class="btn" id="btnLibImport" title="Nhập thư viện từ tệp .json">Nhập</button>
+      </div>
+    </aside>
+  </div>
+
+  <dialog id="dlgSettings">
+    <div class="dlg-head"><h2>Cài đặt</h2><button class="icon-btn" data-close title="Đóng"></button></div>
+    <div class="dlg-body">
+      <div class="field">
+        <label for="setKeyboard">Bàn phím toán trên màn hình</label>
+        <select id="setKeyboard">
+          <option value="auto">Tự động (hiện trên điện thoại/máy cảm ứng)</option>
+          <option value="manual">Chỉ khi bấm nút bàn phím</option>
+          <option value="off">Tắt</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="setTheme">Giao diện</label>
+        <select id="setTheme">
+          <option value="auto">Theo hệ thống</option>
+          <option value="light">Sáng</option>
+          <option value="dark">Tối</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="setScale">Độ nét ảnh PNG</label>
+        <select id="setScale">
+          <option value="2">Thường (×2)</option>
+          <option value="4">Nét (×4)</option>
+          <option value="6">Rất nét (×6, dùng để in)</option>
+        </select>
+        <label class="check"><input type="checkbox" id="setWhite" /> Ảnh có nền trắng</label>
+      </div>
+      <div class="field">
+        <label class="check"><input type="checkbox" id="setAutoSave" /> Tự lưu vào “Gần đây” mỗi lần copy</label>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="dlgHelp">
+    <div class="dlg-head"><h2>Hướng dẫn nhanh</h2><button class="icon-btn" data-close title="Đóng"></button></div>
+    <div class="dlg-body">
+      <h3>Đưa công thức vào Word</h3>
+      <ol>
+        <li>Soạn công thức, bấm <b>Copy vào Word</b> (hoặc <kbd>Ctrl</kbd>+<kbd>Enter</kbd>).</li>
+        <li>Sang Word, đặt con trỏ và nhấn <kbd>Ctrl</kbd>+<kbd>V</kbd>. Công thức trở thành phương trình gốc của Word (Equation), sửa được, in nét.</li>
+        <li>Muốn nút chèn ngay trong Word: cài <b>Word add-in MyMath</b> (xem tệp HƯỚNG DẪN trong thư mục dự án).</li>
+        <li>Trên Android: bấm <b>Tải .docx</b> rồi mở bằng Word, hoặc <b>Copy ảnh</b> để dán vào Zalo/Messenger.</li>
+      </ol>
+      <h3>Gõ tắt trong ô soạn</h3>
+      <table class="keys">
+        <tr><td><kbd>/</kbd></td><td>Phân số</td><td><kbd>^</kbd> / <kbd>_</kbd></td><td>Mũ / chỉ số dưới</td></tr>
+        <tr><td><code>sqrt</code></td><td>Căn bậc hai</td><td><code>pi</code>, <code>alpha</code>…</td><td>Chữ Hy Lạp</td></tr>
+        <tr><td><code>int</code>, <code>sum</code></td><td>Tích phân, tổng</td><td><code>lim</code>, <code>sin</code>, <code>log</code></td><td>Hàm số</td></tr>
+        <tr><td><code>&gt;=</code> <code>&lt;=</code> <code>!=</code></td><td>≥ ≤ ≠</td><td><code>-&gt;</code> <code>=&gt;</code></td><td>→ ⇒</td></tr>
+        <tr><td><code>oo</code></td><td>∞ (vô cực)</td><td><kbd>Tab</kbd></td><td>Nhảy sang ô trống kế tiếp</td></tr>
+        <tr><td><kbd>(</kbd></td><td>Ngoặc tự co giãn</td><td><kbd>\</kbd></td><td>Gõ lệnh LaTeX bất kỳ</td></tr>
+      </table>
+      <h3>Mẹo</h3>
+      <ul>
+        <li>Bôi đen một phần rồi bấm mẫu (ví dụ căn, ngoặc) để bọc phần đó.</li>
+        <li>Muốn gõ chữ tiếng Việt trong công thức: nhóm <b>Cơ bản → Chữ</b>.</li>
+        <li>Word 365 cũng nhận LaTeX: <b>Copy LaTeX</b> → trong Word nhấn <kbd>Alt</kbd>+<kbd>=</kbd>, chọn chế độ LaTeX, dán, rồi chọn “Professional”.</li>
+      </ul>
+      <p class="muted" id="aboutLine"></p>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
