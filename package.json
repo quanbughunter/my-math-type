@@ -1,7 +1,7 @@
 {
   "name": "my-math-type",
   "productName": "MyMath",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Soạn công thức toán kiểu MathType, dán vào Word thành phương trình gốc; chạy trên Windows, Android và làm Word add-in.",
   "author": "MyMath",
   "license": "MIT",

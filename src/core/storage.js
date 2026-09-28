@@ -28,6 +28,9 @@ export const DEFAULT_SETTINGS = {
   pngWhite: false,        // nền trắng cho ảnh
   theme: 'auto',          // auto | light | dark
   autoSave: true,         // tự lưu vào "Gần đây" mỗi lần copy/chèn
+  fmtFont: 'Cambria Math', // font khi đưa vào Word
+  fmtSize: 12,            // cỡ chữ chính (pt)
+  fmtSub: 0,              // cỡ chỉ số (pt), 0 = Word tự tính
 };
 
 export function loadSettings() {

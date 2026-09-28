@@ -19,7 +19,8 @@
 .editor-card .mm-field-wrap { background: var(--bg); }
 .editor-card math-field.mm-field { min-height: 190px; }
 
-.mode-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mode-row { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; }
+#fmtHost { flex: 1; min-width: 0; }
 .size { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
 .size input { width: 140px; accent-color: var(--accent); }
 

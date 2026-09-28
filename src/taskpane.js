@@ -12,6 +12,7 @@ import { flatOpcForInsert } from './core/ooxml.js';
 import { isBlankLatex } from './core/latex.js';
 import { copyText } from './core/platform.js';
 import { parseXml, ln } from './core/dom.js';
+import { createFormatBar, formatFromSettings } from './ui/format-bar.js';
 
 const $ = (s) => document.querySelector(s);
 const settings = loadSettings();
@@ -53,6 +54,7 @@ $('#modeSeg').addEventListener('click', (e) => {
   paintMode();
 });
 paintMode();
+createFormatBar($('#fmtHost'), settings, () => saveSettings(settings));
 
 function checkConvertible() {
   const w = $('#warn');
@@ -95,7 +97,7 @@ if (typeof Office === 'undefined') {
 
 function requireWord() {
   if (inWord) return true;
-  toast('Hãy mở khung này bên trong Word: tab Chèn (Insert) → MyMath.', true);
+  toast('Hãy mở khung này bên trong Word: tab MyMath → Công thức.', true);
   return false;
 }
 
@@ -123,7 +125,7 @@ async function insert({ asNew = false } = {}) {
   if (isBlankLatex(latex)) return toast('Công thức đang trống.', true);
   let omml;
   try {
-    omml = latexToOmml(latex, { display: settings.display });
+    omml = latexToOmml(latex, { display: settings.display, format: formatFromSettings(settings) });
   } catch (e) {
     return toast('Chưa chuyển được: ' + String(e.message || e).slice(0, 140), true);
   }

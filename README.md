@@ -5,7 +5,7 @@ Một mã nguồn, ba cách dùng:
 | Nền tảng | Dạng cài | Đưa công thức vào Word |
 |---|---|---|
 | **Windows** | Bộ cài `.exe` (Electron) hoặc cài từ web (PWA) | **Copy vào Word** → `Ctrl+V` ⇒ thành phương trình gốc (Equation) |
-| **Word (Windows, Mac, Word trên web)** | **Word add-in**: nút *Công thức* ở tab **Chèn (Insert)** | Chèn thẳng phương trình gốc, lấy công thức cũ ra sửa |
+| **Word (Windows, Mac, Word trên web)** | **Word add-in**: tab riêng **MyMath** trên thanh công cụ | Chèn thẳng phương trình gốc, lấy công thức cũ ra sửa |
 | **Android** | Cài từ web (PWA) hoặc `.apk` (Capacitor) | **Tải .docx** mở bằng Word, hoặc **Copy ảnh** |
 
 > Tên ứng dụng là *MyMath* (MathType là thương hiệu của Wiris — tránh trùng tên khi đưa lên cửa hàng).
@@ -18,7 +18,8 @@ Một mã nguồn, ba cách dùng:
 - **12 nhóm mẫu kiểu MathType** (≈280 nút): phân số, căn, ngoặc co giãn, tổng/tích phân/giới hạn/đạo hàm, ma trận, định thức, **hệ phương trình, tuyển “hoặc”**, vector `AB→`, góc `ABC^`, tổ hợp `C_n^k`, chỉnh hợp, **hoá học** (`t°`, xúc tác, ⇌, ↑↓, số oxi hoá, đồng vị), Hy Lạp, tập hợp, logic, kiểu chữ, khoảng cách.
 - Xuất: **Copy vào Word** (MathML — Word tự đổi thành phương trình gốc), **Copy LaTeX**, **Copy ảnh PNG** nét (MathJax, chạy offline), **Tải .docx** (OMML gốc).
 - **Thư viện**: tự lưu công thức gần đây, đánh dấu ★, xuất cả thư viện ra một tệp Word, sao lưu/nhập `.json` để chuyển giữa máy tính và điện thoại.
-- Kiểu **Riêng dòng / Cùng dòng**, chỉnh cỡ chữ, giao diện sáng/tối, bàn phím toán trên màn hình (điện thoại).
+- Kiểu **Riêng dòng / Cùng dòng**, giao diện sáng/tối, bàn phím toán trên màn hình (điện thoại).
+- **Font và cỡ chữ (pt)** khi đưa vào Word: Cambria Math (mặc định Word), **Times New Roman kiểu MathType** (chữ, số Times; biến in nghiêng), các font toán STIX Two Math / Latin Modern Math / TeX Gyre Termes Math, hoặc font tự nhập; cỡ chính (vd 12 pt) và cỡ chỉ số (vd 9 pt, để trống = Word tự tính ≈ 3/4). Áp dụng khi chèn bằng add-in và khi tải .docx.
 - Add-in Word: **Chèn vào Word**, **Lấy công thức đang chọn** (đọc phương trình Word → LaTeX → sửa → **Cập nhật**).
 - Chạy **offline** hoàn toàn (trừ Office.js của add-in phải tải từ Microsoft).
 
@@ -88,9 +89,12 @@ Add-in là một trang web chạy trong khung bên phải Word, nên cần đư�
    `https://quanbughunter.github.io/my-math-type/` (manifest ở `…/manifest.xml`).
    *Tài khoản/tên repo khác?* Sửa `mymath.addinUrl` trong `package.json` rồi chạy `npm run manifest`
    (hoặc `npm run manifest -- --url https://ten.github.io/ten-repo/`).
-3. Cài vào Word trên Windows: **bấm đúp `addin\cai-addin-word.cmd`** → đóng hết Word → mở lại →
-   tab **Chèn (Insert)** → nhóm **MyMath** → **Công thức**.
-   (Chưa thấy nút: Chèn → *Bổ trợ của tôi / My Add-ins* → *Bổ trợ nhà phát triển*.) Gỡ: `addin\go-addin-word.cmd`.
+3. Cài vào Word trên Windows (làm **một lần**):
+   - Đóng hết Word → **bấm đúp `addin\cai-addin-word.cmd`**. Windows hỏi quyền quản trị một lần (để chia sẻ thư mục add-in, chỉ đọc, chỉ trên máy này) → **Yes**.
+   - Mở Word → **Home → Add-ins → More Add-ins** → thẻ **SHARED FOLDER** → chọn **MyMath** → **Add**.
+   - Từ đó mỗi lần mở Word đều có sẵn tab **MyMath** → **Công thức**; không phải thêm lại.
+   - Không thấy MyMath trong SHARED FOLDER: đóng Word, bấm đúp `addin\cai-addin-word-xoa-cache.cmd` rồi thử lại. Gỡ: `addin\go-addin-word.cmd`.
+   - Cách này là "danh mục add-in tin cậy" (Trusted Add-in Catalog) của Office: script tạo thư mục `%LOCALAPPDATA%\MyMath\WordAddin`, chia sẻ thành `\\<tên máy>\MyMathAddin` và khai báo nó trong Word.
 4. **Word trên web / Mac:** Chèn → Bổ trợ → *Tải bổ trợ lên (Upload My Add-in)* → chọn `addin/manifest.xml`.
 
 Trong khung add-in:

@@ -139,3 +139,17 @@ select, input[type="range"] { font: inherit; }
 select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
 table.keys { border-collapse: collapse; width: 100%; font-size: 14px; }
 table.keys td { padding: 5px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+
+/* ---------- thanh định dạng (font, cỡ pt) ---------- */
+.fmt-bar { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+.fmt-item { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; color: var(--muted); white-space: nowrap; }
+.fmt-item select, .fmt-item input, .fmt-custom {
+  font: inherit; font-size: 14px; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 5px 7px; min-height: 32px;
+}
+.fmt-item select { max-width: 230px; }
+.fmt-item select:focus, .fmt-item input:focus, .fmt-custom:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.fmt-size, .fmt-sub { width: 84px; }
+.fmt-item em { font-style: normal; }
+.fmt-custom { width: 160px; }
+.fmt-custom[hidden] { display: none; }

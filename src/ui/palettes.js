@@ -32,6 +32,23 @@ export const PALETTES = [
     ]),
   },
   {
+    id: 'style', label: 'Kiểu chữ & Cách',
+    items: S([
+      { t: '\\mathrm{#0}', p: '\\mathrm{Ab}', h: 'Chữ đứng' },
+      { t: '\\mathbf{#0}', p: '\\mathbf{Ab}', h: 'Chữ đậm' },
+      { t: '\\boldsymbol{#0}', p: '\\boldsymbol{\\alpha}', h: 'Ký hiệu đậm' },
+      { t: '\\mathit{#0}', p: '\\mathit{Ab}', h: 'Chữ nghiêng' },
+      { t: '\\mathbb{#0}', p: '\\mathbb{R}', h: 'Chữ kép' },
+      { t: '\\mathcal{#0}', p: '\\mathcal{L}', h: 'Chữ viết tay' },
+      { t: '\\mathfrak{#0}', p: '\\mathfrak{g}', h: 'Chữ Gothic' },
+      { t: '\\text{#0}', p: '\\text{Văn bản}', h: 'Văn bản' },
+      { t: '\\,', p: 'a\\,b', h: 'Cách hẹp' },
+      { t: '\\;', p: 'a\\;b', h: 'Cách vừa' },
+      { t: '\\quad', p: 'a\\quad b', h: 'Cách rộng' },
+      { t: '\\qquad', p: 'a\\qquad b', h: 'Cách rất rộng' },
+    ]),
+  },
+  {
     id: 'calc', label: 'Tổng & Tích phân',
     items: S([
       { t: '\\sum_{#?}^{#?}#0', h: 'Tổng có cận' },
@@ -177,23 +194,6 @@ export const PALETTES = [
       { t: '\\Delta H', p: '\\Delta H', h: 'Biến thiên enthalpy' },
       { t: '\\mathrm{mol}', p: '\\mathrm{mol}' }, { t: '\\mathrm{M}', p: '\\mathrm{M}' },
       { t: '\\left[#0\\right]', p: '[\\mathrm{H}^+]', h: 'Nồng độ' }]),
-  },
-  {
-    id: 'style', label: 'Kiểu chữ & Cách',
-    items: S([
-      { t: '\\mathrm{#0}', p: '\\mathrm{Ab}', h: 'Chữ đứng' },
-      { t: '\\mathbf{#0}', p: '\\mathbf{Ab}', h: 'Chữ đậm' },
-      { t: '\\boldsymbol{#0}', p: '\\boldsymbol{\\alpha}', h: 'Ký hiệu đậm' },
-      { t: '\\mathit{#0}', p: '\\mathit{Ab}', h: 'Chữ nghiêng' },
-      { t: '\\mathbb{#0}', p: '\\mathbb{R}', h: 'Chữ kép' },
-      { t: '\\mathcal{#0}', p: '\\mathcal{L}', h: 'Chữ viết tay' },
-      { t: '\\mathfrak{#0}', p: '\\mathfrak{g}', h: 'Chữ Gothic' },
-      { t: '\\text{#0}', p: '\\text{Văn bản}', h: 'Văn bản' },
-      { t: '\\,', p: 'a\\,b', h: 'Cách hẹp' },
-      { t: '\\;', p: 'a\\;b', h: 'Cách vừa' },
-      { t: '\\quad', p: 'a\\quad b', h: 'Cách rộng' },
-      { t: '\\qquad', p: 'a\\qquad b', h: 'Cách rất rộng' },
-    ]),
   },
 ];
 

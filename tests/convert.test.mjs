@@ -50,22 +50,34 @@ const out = process.argv[2] || join(tmpdir(), 'mymath-test');
 mkdirSync(out, { recursive: true });
 let fail = 0;
 const items = [];
-for (const [name, tex] of CASES) {
-  try {
-    const mml = latexToWordMathML(tex, { display: true });
-    const omml = latexToOmml(tex, { display: true });
-    new DOMParser({ onError: (lvl, msg) => { if (lvl !== 'warning') throw new Error(msg); } }).parseFromString(omml, 'application/xml');
-    const back = ommlToLatexList(omml)[0].latex;
-    // vòng lại lần 2 để chắc LaTeX quay về vẫn chuyển được
-    latexToOmml(back, { display: true });
-    items.push({ caption: `${name}:  ${tex}`, omml });
-    console.log(`✓ ${name}\n   MML : ${mml.slice(0, 160)}${mml.length > 160 ? '…' : ''}\n   BACK: ${back}`);
-  } catch (e) {
-    fail++;
-    console.log(`✗ ${name}: ${e.message}`);
+// Định dạng khi chèn vào Word: mặc định, Times New Roman kiểu MathType 12/9 pt, font toán STIX 10 pt
+const FORMATS = [
+  ['mặc định', null],
+  ['Times New Roman 12pt, chỉ số 9pt', { font: 'Times New Roman', size: 12, subSize: 9 }],
+  ['Cambria Math 10pt', { font: 'Cambria Math', size: 10 }],
+];
+for (const [fname, format] of FORMATS) {
+  items.push({ caption: `━━ Định dạng: ${fname} ━━`, omml: null });
+  for (const [name, tex] of CASES) {
+    try {
+      const mml = latexToWordMathML(tex, { display: true });
+      const omml = latexToOmml(tex, { display: true, format });
+      new DOMParser({ onError: (lvl, msg) => { if (lvl !== 'warning') throw new Error(msg); } }).parseFromString(omml, 'application/xml');
+      const back = ommlToLatexList(omml)[0].latex;
+      // vòng lại lần 2 để chắc LaTeX quay về vẫn chuyển được
+      latexToOmml(back, { display: true });
+      if (format && format.font === 'Times New Roman' && /\\text\{[A-Za-z]\}/.test(back)) throw new Error('biến bị đổi thành \\text: ' + back);
+      items.push({ caption: `${name}:  ${tex}`, omml });
+      if (!format) console.log(`✓ ${name}\n   MML : ${mml.slice(0, 160)}${mml.length > 160 ? '…' : ''}\n   BACK: ${back}`);
+      else if (name === CASES[0][0]) console.log(`✓ [${fname}] ${name}\n   BACK: ${back}`);
+    } catch (e) {
+      fail++;
+      console.log(`✗ [${fname}] ${name}: ${e.message}`);
+    }
   }
 }
-const bytes = await buildDocx(items, { heading: 'MyMath — kiểm thử chuyển đổi', type: 'nodebuffer' });
+const bytes = await buildDocx(items.filter((x) => x.omml || x.caption), { heading: 'MyMath — kiểm thử chuyển đổi', type: 'nodebuffer' });
 writeFileSync(join(out, 'mymath-test.docx'), bytes);
-console.log(`\n${CASES.length - fail}/${CASES.length} đạt. Đã ghi ${out}/mymath-test.docx`);
+const total = CASES.length * FORMATS.length;
+console.log(`\n${total - fail}/${total} đạt. Đã ghi ${join(out, 'mymath-test.docx')}`);
 process.exit(fail ? 1 : 0);

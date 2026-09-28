@@ -34,3 +34,8 @@ body.pane { background: var(--bg); min-height: 100%; }
 .recent button:hover { border-color: var(--accent); background: var(--accent-soft); }
 .recent .empty { color: var(--muted); font-size: 13px; padding: 4px 2px; }
 .small { font-size: 12.5px; margin: 0; }
+
+#fmtHost { gap: 6px 10px; }
+#fmtHost .fmt-font { flex: 1 1 100%; }
+#fmtHost .fmt-font select { flex: 1; max-width: none; width: 100%; }
+#fmtHost .fmt-size, #fmtHost .fmt-sub { width: 84px; }

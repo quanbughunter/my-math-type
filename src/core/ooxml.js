@@ -70,7 +70,7 @@ export async function buildDocx(items, { title = 'Công thức', heading, type =
   if (heading) body += textParagraph(heading, { bold: true, size: 32 });
   for (const it of items) {
     if (it.caption) body += textParagraph(it.caption);
-    body += equationParagraph(it.omml);
+    if (it.omml) body += equationParagraph(it.omml);
   }
   const zip = new JSZip();
   zip.file('[Content_Types].xml', CONTENT_TYPES);

@@ -71,22 +71,41 @@ function charsToTex(s) {
   return out;
 }
 
+const M_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
+const mRPrOf = (r) => kids(r).find((k) => ln(k) === 'rPr' && k.namespaceURI === M_NS) || null;
+const wRPrOf = (r) => kids(r).find((k) => ln(k) === 'rPr' && k.namespaceURI !== M_NS) || null;
+const valOf = (el, key) => {
+  const p = el && child(el, key);
+  if (!p) return undefined;
+  return p.getAttribute('m:val') ?? p.getAttributeNS?.(M_NS, 'val') ?? '';
+};
+
 function runTex(r) {
   const tEls = kids(r).filter((k) => ln(k) === 't');
   const text = tEls.map((t) => t.textContent || '').join('');
   if (!text) return '';
-  const rpr = child(r, 'rPr');
-  const nor = rpr && child(rpr, 'nor');
+  const mrpr = mRPrOf(r);
+  const wrpr = wRPrOf(r);
+  const nor = mrpr && child(mrpr, 'nor');
   if (nor) {
-    if (/^[\s\u2000-\u200A\u205F]+$/.test(text)) {
-      const SP = { '\u2009': '\\,', '\u205F': '\\:', '\u2004': '\\;', '\u2003': '\\quad ', '\u2002': '\\enspace ' };
+    if (/^[\s -  ]+$/.test(text)) {
+      const SP = { ' ': '\\,', ' ': '\\:', ' ': '\;', ' ': '\\quad ', ' ': '\\enspace ' };
       return [...text].map((c) => SP[c] || '\\ ').join('');
     }
+    // Chữ "Normal Text" kiểu MathType (Times New Roman): biến nghiêng, số, tên hàm → trở lại dạng toán
+    const italic = !!(wrpr && child(wrpr, 'i'));
+    const bold = !!(wrpr && child(wrpr, 'b'));
+    const wrapB = (x) => (bold ? `\\mathbf{${x}}` : x);
+    if (/^[A-Za-z]$/.test(text)) return wrapB(italic ? text : `\\mathrm{${text}}`);
+    if (italic && /^[A-Za-z]+$/.test(text)) return wrapB(text);
+    if (/^\d+(?:[.,]\d+)*$/.test(text)) return text;
+    if (FUNCS.has(text)) return `\\${text} `;
+    if (/^[Ͱ-Ͽ]+$/.test(text)) return charsToTex(text);
     const clean = text.replace(/[\\{}$&#%_^~]/g, (c) => '\\' + c);
     return `\\text{${clean}}`;
   }
-  const sty = rpr ? prop(r, 'rPr', 'sty') : undefined;
-  const scr = rpr ? prop(r, 'rPr', 'scr') : undefined;
+  const sty = valOf(mrpr, 'sty');
+  const scr = valOf(mrpr, 'scr');
   let body = charsToTex(text);
   if (scr === 'double-struck') return `\\mathbb{${text}}`;
   if (scr === 'script') return `\\mathcal{${text}}`;

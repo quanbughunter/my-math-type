@@ -40,8 +40,9 @@
           <button type="button" data-display="1" title="Công thức nằm riêng một dòng, căn giữa">Riêng dòng</button>
           <button type="button" data-display="0" title="Công thức nằm trong dòng chữ">Cùng dòng</button>
         </div>
-        <label class="size">
-          <span>Cỡ</span>
+        <div id="fmtHost" aria-label="Font và cỡ chữ khi đưa vào Word"></div>
+        <label class="size" title="Phóng to / thu nhỏ ô soạn (không ảnh hưởng cỡ chữ trong Word)">
+          <span>Thu phóng</span>
           <input type="range" id="fontSize" min="18" max="56" step="2" />
         </label>
       </div>
@@ -57,7 +58,7 @@
           <button class="btn" id="btnFav" title="Lưu vào thư viện (Ctrl+S)"></button>
         </div>
       </section>
-      <p class="hint" id="hint">Bấm <b>Copy vào Word</b> rồi sang Word nhấn <kbd>Ctrl</kbd>+<kbd>V</kbd> — công thức thành phương trình của Word, sửa tiếp được.</p>
+      <p class="hint" id="hint">Bấm <b>Copy vào Word</b> rồi sang Word nhấn <kbd>Ctrl</kbd>+<kbd>V</kbd> — công thức thành phương trình của Word, sửa tiếp được. Font và cỡ chữ đã chọn được áp dụng khi <b>Tải .docx</b> và khi chèn bằng add-in trong Word; khi dán bằng <kbd>Ctrl</kbd>+<kbd>V</kbd>, Word dùng font, cỡ của đoạn văn tại chỗ dán.</p>
 
       <details class="source" id="source">
         <summary>Mã nguồn công thức (LaTeX · MathML · OMML)</summary>

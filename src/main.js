@@ -8,6 +8,7 @@ import { latexToOmml } from './core/omml.js';
 import { isBlankLatex } from './core/latex.js';
 import { buildDocx } from './core/ooxml.js';
 import { copyText, copyImage, saveFile, pickTextFile, isCapacitor } from './core/platform.js';
+import { createFormatBar, formatFromSettings } from './ui/format-bar.js';
 
 const $ = (s) => document.querySelector(s);
 const settings = loadSettings();
@@ -55,7 +56,7 @@ function convertOrThrow(kind = 'mathml') {
   const { portable, display } = current();
   if (isBlankLatex(portable)) throw new Error('Công thức đang trống.');
   try {
-    return kind === 'omml' ? latexToOmml(portable, { display }) : latexToWordMathML(portable, { display });
+    return kind === 'omml' ? latexToOmml(portable, { display, format: formatFromSettings(settings) }) : latexToWordMathML(portable, { display });
   } catch (e) {
     throw new Error('Chưa chuyển được sang Word: ' + cleanErr(e));
   }
@@ -164,6 +165,7 @@ $('#modeSeg').addEventListener('click', (e) => {
   refreshSource();
 });
 paintMode();
+createFormatBar($('#fmtHost'), settings, () => { saveSettings(settings); refreshSource(); });
 const fs = $('#fontSize');
 fs.value = settings.fontSize;
 fs.addEventListener('input', () => {
@@ -181,7 +183,7 @@ function refreshSource() {
   srcText.readOnly = srcKind !== 'latex';
   if (srcKind === 'latex') { srcText.value = latex; return; }
   try {
-    srcText.value = isBlankLatex(portable) ? '' : srcKind === 'omml' ? latexToOmml(portable, { display }) : latexToWordMathML(portable, { display });
+    srcText.value = isBlankLatex(portable) ? '' : srcKind === 'omml' ? latexToOmml(portable, { display, format: formatFromSettings(settings) }) : latexToWordMathML(portable, { display });
   } catch (e) { srcText.value = '⚠ ' + cleanErr(e); }
 }
 $('#source').addEventListener('toggle', refreshSource);
@@ -247,7 +249,7 @@ $('#btnLibDocx').addEventListener('click', async () => {
   const list = libFilter === 'fav' ? all.filter((x) => x.fav) : all;
   const items = [];
   for (const x of list) {
-    try { items.push({ omml: latexToOmml(x.latex, { display: x.display !== false }) }); } catch { /* bỏ mục lỗi */ }
+    try { items.push({ omml: latexToOmml(x.latex, { display: x.display !== false, format: formatFromSettings(settings) }) }); } catch { /* bỏ mục lỗi */ }
   }
   if (!items.length) return toast('Không có công thức để xuất.', true);
   const blob = await buildDocx(items, { title: 'Thư viện công thức', heading: 'Thư viện công thức MyMath' });
