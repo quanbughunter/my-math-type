@@ -61,9 +61,10 @@ try {
   New-ItemProperty -Path $key -Name 'Url'   -Value $unc         -PropertyType String -Force | Out-Null
   New-ItemProperty -Path $key -Name 'Flags' -Value 1            -PropertyType DWord  -Force | Out-Null
 
-  # 4) Bỏ bản cài kiểu "Developer" trước đây (để khỏi hiện hai lần)
+  # 4) Đăng ký thêm kiểu "Developer" (cách cũ, chắc chắn hiện ngay trong Home → Add-ins → Developer Add-ins)
   $dev = 'HKCU:\Software\Microsoft\Office\16.0\WEF\Developer'
-  if (Test-Path $dev) { Remove-ItemProperty -Path $dev -Name $id -ErrorAction SilentlyContinue }
+  if (-not (Test-Path $dev)) { New-Item -Path $dev -Force | Out-Null }
+  New-ItemProperty -Path $dev -Name $id -Value $Manifest -PropertyType String -Force | Out-Null
 
   # 5) (Tuỳ chọn) xoá bộ đệm add-in của Office
   if ($ClearCache) {
@@ -79,10 +80,9 @@ try {
   Write-Host "  Danh mục add-in: $unc"
   Write-Host "  Trang web      : $src"
   Write-Host ''
-  Write-Host 'Việc còn lại (CHỈ LÀM MỘT LẦN):' -ForegroundColor Cyan
-  Write-Host '  1. Mở Word, tab Home (Trang đầu) → Add-ins → More Add-ins (Thêm bổ trợ).'
-  Write-Host '  2. Chọn thẻ SHARED FOLDER (THƯ MỤC ĐƯỢC CHIA SẺ) → chọn MyMath → Add (Thêm).'
-  Write-Host '  3. Từ đó mỗi lần mở Word sẽ có sẵn tab MyMath trên thanh công cụ.'
+  Write-Host 'Mở Word:' -ForegroundColor Cyan
+  Write-Host '  - Dùng ngay: Home → Add-ins → mục Developer Add-ins → MyMath (như trước).'
+  Write-Host '  - Để Word nhớ luôn (làm MỘT lần): Home → Add-ins → More Add-ins → thẻ SHARED FOLDER → MyMath → Add.'
 } catch {
   Write-Host "Lỗi: $($_.Exception.Message)" -ForegroundColor Red
   exit 1
